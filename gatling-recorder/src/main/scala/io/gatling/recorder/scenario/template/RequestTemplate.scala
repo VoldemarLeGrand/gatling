@@ -77,6 +77,14 @@ private[scenario] object RequestTemplate {
         else
           EmptyFastring
 
+      def renderResponseHeadersCheck: Fastring =
+        if (request.responseHeaders.nonEmpty && config.http.checkResponseHeaders)
+          request.responseHeaders
+            .transform((name, value) => fast"""			.check(headerRegex("$name", ${protectWithTripleQuotes(value)}))""")
+            .mkFastring("\n")
+        else
+          EmptyFastring
+
       def renderResponseBodyCheck: Fastring =
         if (request.responseBody.isDefined && config.http.checkResponseBodies)
           fast"""
@@ -97,7 +105,7 @@ private[scenario] object RequestTemplate {
           EmptyFastring
 
     fast"""http("request_${request.id}")
-			.$renderMethod$renderHeaders$renderBodyOrParams$renderCredentials$renderResources$renderStatusCheck$renderResponseBodyCheck"""
+			.$renderMethod$renderHeaders$renderBodyOrParams$renderCredentials$renderResources$renderStatusCheck$renderResponseHeadersCheck$renderResponseBodyCheck"""
   }
 
   def render(simulationClass: String, request: RequestElement, extractedUri: ExtractedUris)(implicit config: RecorderConfiguration): String =

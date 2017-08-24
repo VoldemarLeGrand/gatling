@@ -57,6 +57,7 @@ private[recorder] object RequestElement {
     val requestContentType = requestHeaders.get(ContentType)
     val requestUserAgent = requestHeaders.get(UserAgent)
     val responseContentType = Option(response.headers.get(ContentType))
+    val responseHeaders: Map[String, String] = response.headers.entries.map { entry => (entry.getKey, entry.getValue) }(breakOut)
 
     val containsFormParams = requestContentType.exists(_.contains(ApplicationFormUrlEncoded))
 
@@ -98,7 +99,7 @@ private[recorder] object RequestElement {
       else
         requestHeaders
 
-    RequestElement(new String(request.uri), request.method.toString, filteredRequestHeaders, requestBody, responseBody, response.status.code, embeddedResources)
+    RequestElement(new String(request.uri), request.method.toString, filteredRequestHeaders, requestBody, responseBody, responseHeaders, response.status.code, embeddedResources)
   }
 }
 
@@ -108,6 +109,7 @@ private[recorder] case class RequestElement(
     headers:              Map[String, String],
     body:                 Option[RequestBody],
     responseBody:         Option[ResponseBody],
+    responseHeaders:      Map[String, String],
     statusCode:           Int,
     embeddedResources:    List[EmbeddedResource],
     nonEmbeddedResources: List[RequestElement]   = Nil

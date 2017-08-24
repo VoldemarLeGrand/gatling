@@ -84,6 +84,8 @@ private[recorder] object HarReader {
 
     val responseBody = entry.response.content.textAsBytes map ResponseBodyBytes
 
+    val responseHeaders = Map[String, String]()
+
     val embeddedResources = entry.response.content match {
       case Content("text/html", Some(text)) =>
         val userAgent = requestHeaders.get(UserAgent).flatMap(io.gatling.http.fetch.UserAgent.parseFromHeader)
@@ -91,7 +93,7 @@ private[recorder] object HarReader {
       case _ => Nil
     }
 
-    TimedScenarioElement(entry.sendTime, entry.sendTime, RequestElement(uri, method, requestHeaders, requestBody, responseBody, entry.response.status, embeddedResources))
+    TimedScenarioElement(entry.sendTime, entry.sendTime, RequestElement(uri, method, requestHeaders, requestBody, responseBody, responseHeaders, entry.response.status, embeddedResources))
   }
 
   private def buildRequestHeaders(entry: Entry): Map[String, String] = {

@@ -142,7 +142,8 @@ private[recorder] object RecorderConfiguration extends StrictLogging {
         followRedirect = config.getBoolean(http.FollowRedirect),
         inferHtmlResources = config.getBoolean(http.InferHtmlResources),
         removeCacheHeaders = config.getBoolean(http.RemoveCacheHeaders),
-        checkResponseBodies = config.getBoolean(http.CheckResponseBodies)
+        checkResponseBodies = config.getBoolean(http.CheckResponseBodies),
+        checkResponseHeaders = config.getBoolean(http.CheckResponseHeaders)
       ),
       proxy = ProxyConfiguration(
         port = config.getInt(proxy.Port),
@@ -208,7 +209,8 @@ private[recorder] case class HttpConfiguration(
   followRedirect:      Boolean,
   inferHtmlResources:  Boolean,
   removeCacheHeaders:  Boolean,
-  checkResponseBodies: Boolean
+  checkResponseBodies: Boolean,
+  checkResponseHeaders: Boolean
 )
 
 private[recorder] case class KeyStoreConfiguration(
